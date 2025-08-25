@@ -30,20 +30,16 @@ Choose one of these packet capture libraries:
 ### 4. Build Instructions
 
 ```cmd
-# Clone the repository
 git clone <repository-url>
 cd network-monitor
 
-# Create build directory
 mkdir build
 cd build
 
-# Configure with CMake (adjust paths as needed)
 cmake .. -G "Visual Studio 16 2019" ^
     -DPCAP_INCLUDE_DIR="C:\Program Files\Npcap SDK\Include" ^
     -DWPCAP_LIBRARY="C:\Program Files\Npcap SDK\Lib\x64\wpcap.lib"
 
-# Build
 cmake --build . --config Release
 ```
 
@@ -54,7 +50,6 @@ The built executable will be in `build\Release\network2.0.exe`
 **Important**: Run as Administrator to access network interfaces for packet capture.
 
 ```cmd
-# Run as Administrator
 network2.0.exe --help
 ```
 
@@ -77,14 +72,11 @@ network2.0.exe --help
 You can also use vcpkg to manage dependencies:
 
 ```cmd
-# Install vcpkg
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 .\bootstrap-vcpkg.bat
 
-# Install pcap
 .\vcpkg install pcap:x64-windows
 
-# Build with vcpkg toolchain
 cmake .. -DCMAKE_TOOLCHAIN_FILE=<vcpkg-root>/scripts/buildsystems/vcpkg.cmake
 ```
