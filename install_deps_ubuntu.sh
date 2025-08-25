@@ -1,6 +1,3 @@
-#!/bin/bash
-
-
 echo "=== Installing Network 2.0 Dependencies (Ubuntu/Debian) ==="
 
 sudo apt-get update
