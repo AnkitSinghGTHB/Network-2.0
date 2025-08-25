@@ -60,5 +60,4 @@ else()
     target_compile_options(network2.0 PRIVATE -Wall -Wextra -pedantic)
 endif()
 
-# Install
 install(TARGETS network2.0 DESTINATION bin)
