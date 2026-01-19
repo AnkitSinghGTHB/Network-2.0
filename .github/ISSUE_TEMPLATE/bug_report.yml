@@ -1,0 +1,25 @@
+name: "🐛 Bug Report"
+description: "Report a crash or incorrect packet detection."
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: os
+    attributes:
+      label: "Operating System"
+      options:
+        - Ubuntu/Debian
+        - Fedora/Arch
+        - Windows 10/11
+        - macOS
+    validations:
+      required: true
+  - type: textarea
+    id: bug-desc
+    attributes:
+      label: "What happened?"
+      placeholder: "e.g., Segmentation fault when scanning high-traffic interfaces."
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Reproduction Steps"
+      placeholder: "1. Run with sudo ./network2.0\n2. Trigger a port scan..."
