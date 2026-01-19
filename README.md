@@ -1,5 +1,10 @@
 # Network 2.0
 
+<p align="center">
+    <img src="https://img.shields.io/badge/DSCWoC-2026-blueviolet?style=for-the-badge&logo=rocket" alt="DSCWoC Badge">
+    <img src="https://img.shields.io/badge/Mission-Open%20Source-ff69b4?style=for-the-badge&logo=github" alt="Mission Badge">
+  </p>
+
 Advanced C++ command-line network utility for real-time packet monitoring with intelligent anomaly detection.
 
 ## Features
