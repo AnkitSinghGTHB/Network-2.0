@@ -4,6 +4,7 @@
 #include "PacketTypes.h"
 #include <string>
 #include <vector>
+#include <functional>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -36,7 +37,7 @@ public:
     void stopCapture();
     std::vector<std::string> getAvailableInterfaces();
     
-    void (*onPacketReceived)(const PacketInfo& packet);
+    std::function<void(const PacketInfo&)> onPacketReceived;
     
     bool isActive() const { return isCapturing; }
     const std::string& getInterface() const { return interface; }

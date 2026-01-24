@@ -24,7 +24,7 @@ public:
     void recordPacket(const PacketInfo& packet);
     void reset();
     void printStats() const;
-    void printLiveTable(const std::vector<PacketInfo>& recentPackets) const;
+    void printLiveTable(const PacketInfo* recentPackets, size_t count) const;
     
     uint64_t getTotalPackets() const { return totalPackets; }
     uint64_t getTotalBytes() const { return totalBytes; }
