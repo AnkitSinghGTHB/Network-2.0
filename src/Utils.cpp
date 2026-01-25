@@ -85,7 +85,7 @@ bool Utils::isValidIP(const std::string& ip) {
 bool Utils::isValidPort(const std::string& port) {
     try {
         int p = std::stoi(port);
-        return p >= 1 && p <= 65535;
+        return p >= 0 && p <= 65535;
     } catch (...) {
         return false;
     }

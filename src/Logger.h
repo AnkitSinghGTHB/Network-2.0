@@ -2,6 +2,7 @@
 #define LOGGER_H
 
 #include "PacketTypes.h"
+#include "Alert.h"
 #include <string>
 #include <fstream>
 #include <vector>

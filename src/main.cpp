@@ -10,6 +10,7 @@
 #include <atomic>
 #include <queue>
 #include <mutex>
+#include <vector>
 
 class NetworkMonitor {
 private:
@@ -87,16 +88,24 @@ bool NetworkMonitor::parseArguments(int argc, char* argv[]) {
             printHelp();
             return false;
         } else if (arg == "--watch-ip" && i + 1 < argc) {
-            watchRules.addWatchIP(argv[++i]);
-        } else if (arg == "--alert-port" && i + 1 < argc) {
-            try {
-                uint16_t port = std::stoi(argv[++i]);
-                watchRules.addWatchPort(port);
-            } catch (...) {
-                std::cout << Utils::Colors::RED << "Invalid port number: " << argv[i] 
+            std::string ip = argv[++i];
+            if (!Utils::isValidIP(ip)) {
+                std::cerr << Utils::Colors::RED << "Error: Invalid IP address '" << ip << "'" 
                           << Utils::Colors::RESET << std::endl;
+                std::cerr << "Expected format: xxx.xxx.xxx.xxx (e.g., 192.168.1.10)" << std::endl;
                 return false;
             }
+            watchRules.addWatchIP(ip);
+        } else if (arg == "--alert-port" && i + 1 < argc) {
+            std::string portStr = argv[++i];
+            if (!Utils::isValidPort(portStr)) {
+                std::cerr << Utils::Colors::RED << "Error: Invalid port number '" << portStr << "'"
+                          << Utils::Colors::RESET << std::endl;
+                std::cerr << "Port must be a number between 0 and 65535" << std::endl;
+                return false;
+            }
+            uint16_t port = static_cast<uint16_t>(std::stoi(portStr));
+            watchRules.addWatchPort(port);
         } else if (arg == "--log" && i + 1 < argc) {
             logger.enableLogging(argv[++i]);
         } else if (arg == "--interface" && i + 1 < argc) {
@@ -206,7 +215,7 @@ void NetworkMonitor::displayLoop() {
             packetQueue.pop();
         }
         
-        size_t displayCount = std::min(stats.getTotalPackets(), 
+        size_t displayCount = (std::min)(stats.getTotalPackets(), 
                                      static_cast<uint64_t>(MAX_DISPLAY_PACKETS));
         stats.printLiveTable(recentPackets, displayCount);
         
@@ -243,7 +252,7 @@ void NetworkMonitor::handleUserInput() {
         } else if (input.substr(0, 2) == "e " || input.substr(0, 7) == "export ") {
             std::string filename = input.substr(input.find(' ') + 1);
             std::vector<PacketInfo> packets(recentPackets, 
-                                          recentPackets + std::min(stats.getTotalPackets(), 
+                                          recentPackets + (std::min)(stats.getTotalPackets(), 
                                                                   static_cast<uint64_t>(MAX_DISPLAY_PACKETS)));
             logger.exportToCSV(packets, filename);
         } else {

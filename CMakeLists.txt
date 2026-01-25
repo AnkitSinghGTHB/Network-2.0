@@ -7,11 +7,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(WIN32)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_definitions(-D_WIN32_WINNT=0x0601)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+    add_definitions(-DWPCAP)
+    add_definitions(-DHAVE_REMOTE)
 endif()
 
 if(WIN32)
-    find_library(WPCAP_LIBRARY wpcap HINTS "C:/WinPcap/Lib/x64" "C:/WinPcap/Lib")
-    find_path(PCAP_INCLUDE_DIR pcap.h HINTS "C:/WinPcap/Include")
+    find_library(WPCAP_LIBRARY wpcap HINTS 
+        "${CMAKE_SOURCE_DIR}/npcap-sdk/Lib/x64" 
+        "${CMAKE_SOURCE_DIR}/npcap-sdk/Lib"
+        "C:/WinPcap/Lib/x64" 
+        "C:/WinPcap/Lib")
+    find_path(PCAP_INCLUDE_DIR pcap.h HINTS 
+        "${CMAKE_SOURCE_DIR}/npcap-sdk/Include"
+        "C:/WinPcap/Include")
     set(PCAP_LIBRARIES ${WPCAP_LIBRARY} ws2_32)
 else()
     find_library(PCAP_LIBRARY pcap)
@@ -19,8 +28,14 @@ else()
     set(PCAP_LIBRARIES ${PCAP_LIBRARY})
 endif()
 
-if(NOT PCAP_LIBRARY OR NOT PCAP_INCLUDE_DIR)
-    message(FATAL_ERROR "libpcap not found. Please install libpcap development package.")
+if(WIN32)
+    if(NOT WPCAP_LIBRARY OR NOT PCAP_INCLUDE_DIR)
+        message(FATAL_ERROR "libpcap not found. Please install libpcap development package.")
+    endif()
+else()
+    if(NOT PCAP_LIBRARY OR NOT PCAP_INCLUDE_DIR)
+        message(FATAL_ERROR "libpcap not found. Please install libpcap development package.")
+    endif()
 endif()
 
 include_directories(${PCAP_INCLUDE_DIR})
