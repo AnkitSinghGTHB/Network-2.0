@@ -19,6 +19,7 @@ private:
     NetworkStats stats;
     WatchRules watchRules;
     Logger logger;
+    std::string protocolFilter;  // Empty = no filter, "TCP", "UDP", or "ICMP"
     
     std::atomic<bool> running{false};
     std::queue<PacketInfo> packetQueue;
@@ -109,7 +110,18 @@ bool NetworkMonitor::parseArguments(int argc, char* argv[]) {
         } else if (arg == "--log" && i + 1 < argc) {
             logger.enableLogging(argv[++i]);
         } else if (arg == "--interface" && i + 1 < argc) {
-            i++; 
+            i++;
+        } else if (arg == "--protocol" && i + 1 < argc) {
+            std::string proto = argv[++i];
+            if (!Utils::isValidProtocol(proto)) {
+                std::cerr << Utils::Colors::RED << "Error: Invalid protocol '" << proto << "'"
+                          << Utils::Colors::RESET << std::endl;
+                std::cerr << "Valid protocols: TCP, UDP, ICMP" << std::endl;
+                return false;
+            }
+            protocolFilter = Utils::toUpperCase(proto);
+            std::cout << Utils::Colors::GREEN << "Filtering for protocol: " 
+                      << protocolFilter << Utils::Colors::RESET << std::endl;
         } else {
             std::cout << Utils::Colors::RED << "Unknown argument: " << arg 
                       << Utils::Colors::RESET << std::endl;
@@ -127,7 +139,8 @@ void NetworkMonitor::printHelp() const {
               << "  --watch-ip <IP>         Watch traffic for specific IP address\n"
               << "  --alert-port <PORT>     Alert on traffic to/from specific port\n"
               << "  --log <filename>        Enable logging to CSV file\n"
-              << "  --interface <name>      Specify network interface\n\n"
+              << "  --interface <name>      Specify network interface\n"
+              << "  --protocol <TYPE>       Filter by protocol (TCP, UDP, ICMP)\n\n"
               << "Interactive Commands:\n"
               << "  h, help                 Show help\n"
               << "  s, stats                Show detailed statistics\n"
@@ -186,6 +199,11 @@ void NetworkMonitor::stop() {
 }
 
 void NetworkMonitor::processPacket(const PacketInfo& packet) {
+    // Apply protocol filter if set
+    if (!protocolFilter.empty() && packet.protocol != protocolFilter) {
+        return;  // Skip packets that don't match the filter
+    }
+    
     PacketInfo processedPacket = packet;
     
     anomalyDetector.analyzePacket(processedPacket);

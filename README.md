@@ -66,6 +66,7 @@ Available options:
 - `--alert-port <PORT>`: Alert on traffic to/from specific port
 - `--log <filename>`: Enable logging to CSV file
 - `--interface <name>`: Specify network interface
+- `--protocol <TYPE>`: Filter by protocol (TCP, UDP, ICMP)
 - `--help`: Show help message
 
 ### Interactive Commands
@@ -96,6 +97,12 @@ While the program is running, you can use these commands:
 ### Monitor specific interface
 ```bash
 ./network2.0 --interface eth0 --log network_capture.csv
+```
+
+### Filter by protocol
+```bash
+./network2.0 --protocol TCP
+./network2.0 --protocol ICMP --log icmp_traffic.csv
 ```
 
 ## Output Interpretation
