@@ -99,3 +99,16 @@ std::string Utils::getCurrentDateTime() {
     ss << std::put_time(std::localtime(&time_t), "%Y-%m-%d %H:%M:%S");
     return ss.str();
 }
+
+std::string Utils::toUpperCase(const std::string& str) {
+    std::string result = str;
+    for (char& c : result) {
+        c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+    }
+    return result;
+}
+
+bool Utils::isValidProtocol(const std::string& protocol) {
+    std::string upper = toUpperCase(protocol);
+    return (upper == "TCP" || upper == "UDP" || upper == "ICMP");
+}

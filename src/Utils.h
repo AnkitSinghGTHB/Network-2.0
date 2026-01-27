@@ -26,6 +26,8 @@ namespace Utils {
     std::vector<std::string> splitString(const std::string& str, char delimiter);
     bool isValidIP(const std::string& ip);
     bool isValidPort(const std::string& port);
+    bool isValidProtocol(const std::string& protocol);
+    std::string toUpperCase(const std::string& str);
     std::string getCurrentDateTime();
 }
 
